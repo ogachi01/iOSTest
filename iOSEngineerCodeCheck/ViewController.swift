@@ -41,13 +41,19 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         word = searchBar.text!
         
         if word.count != 0 {
+            word = word.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
             url = "https://api.github.com/search/repositories?q=\(word!)"
-            task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, res, err) in
-                if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                    if let items = obj["items"] as? [[String: Any]] {
-                    self.repo = items
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
+            let requestUrl = URL(string: url)
+            task = URLSession.shared.dataTask(with: requestUrl!) { (data, res, err) in
+                if (err != nil) {
+                    print("データ取得時エラー", err)
+                } else {
+                    if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+                        if let items = obj["items"] as? [[String: Any]] {
+                            self.repo = items
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
                         }
                     }
                 }
