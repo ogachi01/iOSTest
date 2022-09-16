@@ -9,24 +9,92 @@
 import UIKit
 
 class ViewController2: UIViewController {
+
     
-    @IBOutlet weak var ImgView: UIImageView!
+//    表示するリポジトリのデータ
+    var repoData: [String:Any] = [:]
     
-    @IBOutlet weak var TtlLbl: UILabel!
+    lazy var ImgView:UIImageView = {
+        var imageView = UIImageView()
+        imageView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
+        return imageView
+    }()
     
-    @IBOutlet weak var LangLbl: UILabel!
+    lazy var TtlLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .title1)
+        label.frame = CGRect(x: ImgView.frame.minX, y: ImgView.frame.maxY + 28, width: ImgView.frame.width, height: 40)
+        return label
+    }()
     
-    @IBOutlet weak var StrsLbl: UILabel!
-    @IBOutlet weak var WchsLbl: UILabel!
-    @IBOutlet weak var FrksLbl: UILabel!
-    @IBOutlet weak var IsssLbl: UILabel!
+    lazy var LangLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .left
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.frame = CGRect(x: ImgView.frame.minX, y: TtlLbl.frame.maxY + 10, width: ImgView.frame.width, height: 40)
+        return label
+    }()
     
-    var vc1: ViewController!
+    lazy var StrsLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: TtlLbl.frame.maxY + 10, width: ImgView.frame.width, height: 40)
+        return label
+    }()
+    
+    lazy var WchsLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: StrsLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        return label
+    }()
+    
+    lazy var FrksLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: WchsLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        return label
+    }()
+    
+    lazy var IsssLbl:UILabel = {
+        var label = UILabel()
+        label.textAlignment = .right
+        label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 1
+        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        return label
+    }()
+
         
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let repo = vc1.repo[vc1.idx]
+        self.view.backgroundColor = UIColor.systemBackground
+        
+        let repo = repoData
+        
+        self.view.addSubview(ImgView)
+        self.view.addSubview(TtlLbl)
+        self.view.addSubview(LangLbl)
+        self.view.addSubview(StrsLbl)
+        self.view.addSubview(WchsLbl)
+        self.view.addSubview(FrksLbl)
+        self.view.addSubview(IsssLbl)
         
         LangLbl.text = "Written in \(repo["language"] as? String ?? "")"
         StrsLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
@@ -39,7 +107,7 @@ class ViewController2: UIViewController {
     
     func getImage(){
         
-        let repo = vc1.repo[vc1.idx]
+        let repo = repoData
         
         TtlLbl.text = repo["full_name"] as? String
         

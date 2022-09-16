@@ -8,22 +8,45 @@
 
 import UIKit
 
-class ViewController: UITableViewController, UISearchBarDelegate {
+class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
-    @IBOutlet weak var SchBr: UISearchBar!
     
     var repo: [[String: Any]]=[]
     
     var task: URLSessionTask?
     var word: String!
     var url: String!
-    var idx: Int!
+    
+    lazy var SchBr: UISearchBar = {
+        let SearchBar = UISearchBar()
+        SearchBar.text = "GitHubのリポジトリを検索できるよー"
+        SearchBar.delegate = self
+        SearchBar.frame = CGRect(x: 0, y: topHeight, width:view.frame.width, height: 40)
+        return SearchBar
+    }()
+    
+    lazy var Tbl: UITableView = {
+        var Table = UITableView()
+        Table.delegate = self
+        Table.dataSource = self
+        Table.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: self.view.frame.width, height: self.view.frame.height - SchBr.frame.maxY)
+        return Table
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        SchBr.text = "GitHubのリポジトリを検索できるよー"
-        SchBr.delegate = self
+
+//        ナビゲーションバー
+        title = "Root View Controller"
+        navigationController?.navigationBar.backgroundColor = UIColor.systemBackground
+        
+        
+        self.view.backgroundColor = UIColor.systemBackground
+
+        self.view.addSubview(SchBr)
+        self.view.addSubview(Tbl)
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -46,13 +69,13 @@ class ViewController: UITableViewController, UISearchBarDelegate {
             let requestUrl = URL(string: url)
             task = URLSession.shared.dataTask(with: requestUrl!) { (data, res, err) in
                 if (err != nil) {
-                    print("データ取得時エラー", err)
+                    print("データ取得時エラー", err as Any)
                 } else {
                     if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
                             self.repo = items
                             DispatchQueue.main.async {
-                                self.tableView.reloadData()
+                                self.Tbl.reloadData()
                             }
                         }
                     }
@@ -64,35 +87,48 @@ class ViewController: UITableViewController, UISearchBarDelegate {
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "Detail"{
-            let dtl = segue.destination as! ViewController2
-            dtl.vc1 = self
-        }
-        
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//
+//        if segue.identifier == "Detail"{
+//            let dtl = segue.destination as! ViewController2
+//            dtl.vc1 = self
+//        }
+//
+//    }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repo.count
     }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         let cell = UITableViewCell()
         let rp = repo[indexPath.row]
         cell.textLabel?.text = rp["full_name"] as? String ?? ""
         cell.detailTextLabel?.text = rp["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
-        
+
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 画面遷移時に呼ばれる
-        idx = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
-        
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let vc2 = ViewController2()
+        vc2.repoData = repo[indexPath.row]
+        navigationController?.pushViewController(vc2, animated: true)
     }
     
+}
+
+extension UIViewController {
+    
+//    画面領域の使えるところの上端
+    var topHeight:CGFloat {
+//        ステータスバーの高さ＋ナビゲーションバーの高さ
+        
+        return (navigationController?.view.safeAreaInsets.top ?? 0.0) +
+        (navigationController?.navigationBar.frame.size.height ?? 0.0)
+    }
 }
