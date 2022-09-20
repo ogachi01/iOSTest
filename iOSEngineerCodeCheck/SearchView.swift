@@ -62,39 +62,20 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         word = searchBar.text!
+        print("wait...")
         
         if word.count != 0 {
-            word = word.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
-            url = "https://api.github.com/search/repositories?q=\(word!)"
-            let requestUrl = URL(string: url)
-            task = URLSession.shared.dataTask(with: requestUrl!) { (data, res, err) in
-                if (err != nil) {
-                    print("データ取得時エラー", err as Any)
-                } else {
-                    if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
-                        if let items = obj["items"] as? [[String: Any]] {
-                            self.repo = items
-                            DispatchQueue.main.async {
-                                self.Tbl.reloadData()
-                            }
-                        }
-                    }
+            RepoData().getRepoDatas(searchWord: word) { data in
+                self.repo = data
+                DispatchQueue.main.async {
+                    print("comp!")
+                    self.Tbl.reloadData()
                 }
             }
-        // これ呼ばなきゃリストが更新されません
-        task?.resume()
         }
         
     }
-    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//        if segue.identifier == "Detail"{
-//            let dtl = segue.destination as! ViewController2
-//            dtl.vc1 = self
-//        }
-//
-//    }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repo.count
