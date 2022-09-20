@@ -38,6 +38,9 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        // 画面回転を検知
+        NotificationCenter.default.addObserver(self, selector:#selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification,object: nil)
 
 //        ナビゲーションバー
         title = "Root View Controller"
@@ -48,6 +51,16 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
         self.view.addSubview(SchBr)
         self.view.addSubview(Tbl)
+    }
+    
+    @objc private func didChangeOrientation(_ notification: Notification) {
+        //画面回転時の処理
+        
+        SchBr.frame = CGRect(x: 0, y: topHeight, width:view.frame.width, height: 40)
+        SchBr.setNeedsDisplay()
+        Tbl.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: self.view.frame.width, height: self.view.frame.height - SchBr.frame.maxY)
+        Tbl.setNeedsDisplay()
+        Tbl.reloadData()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
