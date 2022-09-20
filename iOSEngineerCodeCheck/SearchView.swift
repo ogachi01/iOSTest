@@ -29,6 +29,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         var Table = UITableView()
         Table.delegate = self
         Table.dataSource = self
+        Table.dequeueReusableCell(withIdentifier: "Cells")
         Table.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: self.view.frame.width, height: self.view.frame.height - SchBr.frame.maxY)
         return Table
     }()
@@ -83,7 +84,8 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cells") ??
+                        UITableViewCell(style: .value1, reuseIdentifier: "Cells")
         let rp = repo[indexPath.row]
         cell.textLabel?.text = rp["full_name"] as? String ?? ""
         cell.detailTextLabel?.text = rp["language"] as? String ?? ""
