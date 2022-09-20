@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController2: UIViewController {
+class RepoInfoView: UIViewController {
 
     
 //    表示するリポジトリのデータ

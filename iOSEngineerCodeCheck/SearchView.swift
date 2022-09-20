@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     
     var repo: [[String: Any]]=[]
@@ -115,9 +115,9 @@ class ViewController:UIViewController, UITableViewDelegate, UITableViewDataSourc
         // 画面遷移時に呼ばれる
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let vc2 = ViewController2()
-        vc2.repoData = repo[indexPath.row]
-        navigationController?.pushViewController(vc2, animated: true)
+        let infoView = RepoInfoView()
+        infoView.repoData = repo[indexPath.row]
+        navigationController?.pushViewController(infoView, animated: true)
     }
     
 }
