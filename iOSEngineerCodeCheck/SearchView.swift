@@ -62,6 +62,9 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
+//        キーボードをしまう
+        searchBar.resignFirstResponder()
+        
         word = searchBar.text!
         print("wait...")
         
