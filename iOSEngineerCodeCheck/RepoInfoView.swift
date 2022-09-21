@@ -14,10 +14,27 @@ class RepoInfoView: UIViewController {
 //    表示するリポジトリのデータ
     var repoData: [String:Any] = [:]
     
+    
     lazy var ImgView:UIImageView = {
         var imageView = UIImageView()
-        imageView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
+//        縦長・横長で分岐
+        if self.view.frame.height > self.view.frame.width {
+            imageView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
+        } else {
+            imageView.frame = CGRect(x: 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: self.view.frame.height - 100, height: self.view.frame.height - 100)
+        }
         return imageView
+    }()
+    
+    lazy var LblView:UIView = {
+        var view = UIView()
+//        縦長・横長で分岐
+        if self.view.frame.height > self.view.frame.width {
+            view.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 + (self.view.frame.width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+        } else {
+            view.frame = CGRect(x: self.view.frame.width / 2 + 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+        }
+        return view
     }()
     
     lazy var TtlLbl:UILabel = {
@@ -26,7 +43,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .title1)
-        label.frame = CGRect(x: ImgView.frame.minX, y: ImgView.frame.maxY + 28, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: 0, y: 0, width: LblView.frame.width, height: 40)
         return label
     }()
     
@@ -36,7 +53,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.frame = CGRect(x: ImgView.frame.minX, y: TtlLbl.frame.maxY + 10, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: 0, y: TtlLbl.frame.maxY + 10, width: LblView.frame.width, height: 40)
         return label
     }()
     
@@ -46,7 +63,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.frame = CGRect(x: LangLbl.frame.minX, y: TtlLbl.frame.maxY + 10, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: TtlLbl.frame.maxY + 10, width: LblView.frame.width, height: 40)
         return label
     }()
     
@@ -56,7 +73,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.frame = CGRect(x: LangLbl.frame.minX, y: StrsLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: StrsLbl.frame.maxY, width: LblView.frame.width, height: 40)
         return label
     }()
     
@@ -66,7 +83,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.frame = CGRect(x: LangLbl.frame.minX, y: WchsLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: WchsLbl.frame.maxY, width: LblView.frame.width, height: 40)
         return label
     }()
     
@@ -76,7 +93,7 @@ class RepoInfoView: UIViewController {
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: ImgView.frame.width, height: 40)
+        label.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: LblView.frame.width, height: 40)
         return label
     }()
 
@@ -84,17 +101,22 @@ class RepoInfoView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 画面回転を検知
+        NotificationCenter.default.addObserver(self, selector:#selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification,object: nil)
+        
         self.view.backgroundColor = UIColor.systemBackground
         
         let repo = repoData
-        
+
         self.view.addSubview(ImgView)
-        self.view.addSubview(TtlLbl)
-        self.view.addSubview(LangLbl)
-        self.view.addSubview(StrsLbl)
-        self.view.addSubview(WchsLbl)
-        self.view.addSubview(FrksLbl)
-        self.view.addSubview(IsssLbl)
+        LblView.addSubview(TtlLbl)
+        LblView.addSubview(LangLbl)
+        LblView.addSubview(StrsLbl)
+        LblView.addSubview(WchsLbl)
+        LblView.addSubview(FrksLbl)
+        LblView.addSubview(IsssLbl)
+        
+        self.view.addSubview(LblView)
         
         LangLbl.text = "Written in \(repo["language"] as? String ?? "")"
         StrsLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
@@ -103,6 +125,34 @@ class RepoInfoView: UIViewController {
         IsssLbl.text = "\(repo["open_issues_count"] as? Int ?? 0) open issues"
         getImage()
         
+    }
+    
+    @objc private func didChangeOrientation(_ notification: Notification) {
+        //画面回転時の処理
+        
+        if self.view.frame.height > self.view.frame.width {
+            ImgView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
+            LblView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 + (self.view.frame.width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+        } else {
+            ImgView.frame = CGRect(x: 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: self.view.frame.height - 100, height: self.view.frame.height - 100)
+            LblView.frame = CGRect(x: self.view.frame.width / 2 + 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+        }
+        
+        ImgView.setNeedsDisplay()
+        LblView.setNeedsDisplay()
+        
+        TtlLbl.frame = CGRect(x: 0, y: 0, width: LblView.frame.width, height: 40)
+        TtlLbl.setNeedsDisplay()
+        LangLbl.frame = CGRect(x: 0, y: TtlLbl.frame.maxY + 10, width: LblView.frame.width, height: 40)
+        LangLbl.setNeedsDisplay()
+        StrsLbl.frame = CGRect(x: LangLbl.frame.minX, y: TtlLbl.frame.maxY + 10, width: LblView.frame.width, height: 40)
+        StrsLbl.setNeedsDisplay()
+        WchsLbl.frame = CGRect(x: LangLbl.frame.minX, y: StrsLbl.frame.maxY, width: LblView.frame.width, height: 40)
+        WchsLbl.setNeedsDisplay()
+        FrksLbl.frame = CGRect(x: LangLbl.frame.minX, y: WchsLbl.frame.maxY, width: LblView.frame.width, height: 40)
+        FrksLbl.setNeedsDisplay()
+        IsssLbl.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: LblView.frame.width, height: 40)
+        IsssLbl.setNeedsDisplay()
     }
     
     func getImage(){
