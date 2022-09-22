@@ -30,5 +30,20 @@ class iOSEngineerCodeCheckTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    func testGetRepoDatas() throws {
+//        リポジトリデータ取得部のテスト
+//        正しく取得できていれば、取得データ件数は１件以上
+//        ５秒以上かかっても不合格扱い
+        let expectation = self.expectation(description: "test Getting Repository Datas")
+        let repoData = RepoData()
+        
+        repoData.getRepoDatas(searchWord: "test") { data in
+            let receivedData = data
+            expectation.fulfill()
+            XCTAssertTrue(receivedData.count > 0)
+        }
+        self.waitForExpectations(timeout: 5.0, handler: nil)
+    }
 
 }
