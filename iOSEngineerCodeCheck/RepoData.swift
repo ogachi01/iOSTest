@@ -11,11 +11,10 @@ import Foundation
 /// リポジトリデータを扱う関数群
 class RepoData {
     
-    
     /// 検索ワードからURLを生成し、リポジトリを検索
-    /// - Parameter word: 検索ワード
+    /// - Parameter searchWord: 検索ワード
+    /// - Parameter completion: リポジトリデータ
     func getRepoDatas(searchWord: String, completion: @escaping ([[String:Any]]) -> Void) {
-        var repos:[[String:Any]] = []
         let word = searchWord.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
         let url = "https://api.github.com/search/repositories?q=\(word!)"
         let requestUrl = URL(string: url)
@@ -26,9 +25,7 @@ class RepoData {
                 if let obj = try! JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                     if let items = obj["items"] as? [[String: Any]] {
                         completion(items)
-                        //                        DispatchQueue.main.async {
-                        //                            self.Tbl.reloadData()
-                        //                        }
+
                     }
                 }
             }

@@ -31,10 +31,10 @@ class iOSEngineerCodeCheckTests: XCTestCase {
         }
     }
     
+    /// リポジトリデータ取得部のテスト
+    /// 正しく取得できていれば、取得データ件数は１件以上
+    /// ５秒以上かかっても不合格扱い
     func testGetRepoDatas() throws {
-//        リポジトリデータ取得部のテスト
-//        正しく取得できていれば、取得データ件数は１件以上
-//        ５秒以上かかっても不合格扱い
         let expectation = self.expectation(description: "test Getting Repository Datas")
         let repoData = RepoData()
         

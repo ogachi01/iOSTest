@@ -15,6 +15,7 @@ class RepoInfoView: UIViewController {
     var repoData: [String:Any] = [:]
     
     
+    /// 画像表示部
     lazy var ImgView:UIImageView = {
         var imageView = UIImageView()
 //        縦長・横長で分岐
@@ -26,6 +27,7 @@ class RepoInfoView: UIViewController {
         return imageView
     }()
     
+    /// リポジトリの内容を記載するラベルのグループ化用ビュー
     lazy var LblView:UIView = {
         var view = UIView()
 //        縦長・横長で分岐
@@ -37,6 +39,7 @@ class RepoInfoView: UIViewController {
         return view
     }()
     
+    /// リポジトリタイトル
     lazy var TtlLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .center
@@ -47,6 +50,7 @@ class RepoInfoView: UIViewController {
         return label
     }()
     
+    /// 言語
     lazy var LangLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .left
@@ -57,6 +61,7 @@ class RepoInfoView: UIViewController {
         return label
     }()
     
+    /// スター数
     lazy var StrsLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .right
@@ -67,6 +72,7 @@ class RepoInfoView: UIViewController {
         return label
     }()
     
+    /// ウォッチ数
     lazy var WchsLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .right
@@ -77,6 +83,7 @@ class RepoInfoView: UIViewController {
         return label
     }()
     
+    /// フォーク数
     lazy var FrksLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .right
@@ -87,6 +94,7 @@ class RepoInfoView: UIViewController {
         return label
     }()
     
+    /// イシュー数
     lazy var IsssLbl:UILabel = {
         var label = UILabel()
         label.textAlignment = .right
@@ -101,23 +109,25 @@ class RepoInfoView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 画面回転を検知
+//         画面回転を検知
         NotificationCenter.default.addObserver(self, selector:#selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification,object: nil)
         
         self.view.backgroundColor = UIColor.systemBackground
         
         let repo = repoData
 
+//        画面準備している
         self.view.addSubview(ImgView)
+        
         LblView.addSubview(TtlLbl)
         LblView.addSubview(LangLbl)
         LblView.addSubview(StrsLbl)
         LblView.addSubview(WchsLbl)
         LblView.addSubview(FrksLbl)
         LblView.addSubview(IsssLbl)
-        
         self.view.addSubview(LblView)
         
+//        ラベルのテキスト情報の編集
         LangLbl.text = "Written in \(repo["language"] as? String ?? "")"
         StrsLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
         WchsLbl.text = "\(repo["wachers_count"] as? Int ?? 0) watchers"
@@ -127,8 +137,8 @@ class RepoInfoView: UIViewController {
         
     }
     
+    /// 画面回転時の処理
     @objc private func didChangeOrientation(_ notification: Notification) {
-        //画面回転時の処理
         
         if self.view.frame.height > self.view.frame.width {
             ImgView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
@@ -155,6 +165,7 @@ class RepoInfoView: UIViewController {
         IsssLbl.setNeedsDisplay()
     }
     
+    /// 画像を取得・表示
     func getImage(){
         
         let repo = repoData

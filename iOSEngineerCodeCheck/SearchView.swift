@@ -17,6 +17,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     var word: String!
     var url: String!
     
+    /// 検索バー
     lazy var SchBr: UISearchBar = {
         let SearchBar = UISearchBar()
         SearchBar.text = "GitHubのリポジトリを検索できるよー"
@@ -25,6 +26,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         return SearchBar
     }()
     
+    /// 結果表示用テーブル
     lazy var Tbl: UITableView = {
         var Table = UITableView()
         Table.delegate = self
@@ -39,7 +41,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        // 画面回転を検知
+//         画面回転を検知
         NotificationCenter.default.addObserver(self, selector:#selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification,object: nil)
 
 //        ナビゲーションバー
@@ -53,9 +55,8 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         self.view.addSubview(Tbl)
     }
     
+    /// 画面回転検出時に実行
     @objc private func didChangeOrientation(_ notification: Notification) {
-        //画面回転時の処理
-        
         SchBr.frame = CGRect(x: 0, y: topHeight, width:view.frame.width, height: 40)
         SchBr.setNeedsDisplay()
         Tbl.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: self.view.frame.width, height: self.view.frame.height - SchBr.frame.maxY)
@@ -115,6 +116,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         tableView.deselectRow(at: indexPath, animated: true)
 
         let infoView = RepoInfoView()
+//        ↓該当リポジトリのデータは全て渡しているので、後々表示項目を足しても大丈夫
         infoView.repoData = repo[indexPath.row]
         navigationController?.pushViewController(infoView, animated: true)
     }
