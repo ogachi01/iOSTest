@@ -36,6 +36,20 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         return Table
     }()
     
+//    読み込み中に表示するインジケータ
+    lazy var Loading: UIView = {
+        let loadingView = UIView()
+        loadingView.frame = CGRect(x: view.frame.width / 2 - 50, y: view.frame.height / 2 - 50, width: 100, height: 100)
+        loadingView.backgroundColor = UIColor.gray
+        
+        let activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        activityIndicator.color = UIColor.white
+        activityIndicator.style = UIActivityIndicatorView.Style.large
+        activityIndicator.startAnimating()
+        loadingView.addSubview(activityIndicator)
+        return loadingView
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +67,8 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
 
         self.view.addSubview(SchBr)
         self.view.addSubview(Tbl)
+        self.view.addSubview(Loading)
+        Loading.isHidden = true
     }
     
     /// 画面回転検出時に実行
@@ -79,6 +95,8 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
 //        キーボードをしまう
         searchBar.resignFirstResponder()
         
+        Loading.isHidden = false
+        
         word = searchBar.text!
         print("wait...")
         
@@ -88,6 +106,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
                 DispatchQueue.main.async {
                     print("comp!")
                     self.Tbl.reloadData()
+                    self.Loading.isHidden = true
                 }
             }
         }
