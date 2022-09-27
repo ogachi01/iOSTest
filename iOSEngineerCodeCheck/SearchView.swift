@@ -20,7 +20,7 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     /// 検索バー
     lazy var SchBr: UISearchBar = {
         let SearchBar = UISearchBar()
-        SearchBar.text = "GitHubのリポジトリを検索できるよー"
+        SearchBar.placeholder = "GitHubのリポジトリを検索できるよー"
         SearchBar.delegate = self
         SearchBar.frame = CGRect(x: 0, y: topHeight, width:view.frame.width, height: 40)
         return SearchBar
@@ -80,16 +80,11 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
         Tbl.reloadData()
     }
     
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        // ↓こうすれば初期のテキストを消せる
-        searchBar.text = ""
-        return true
-    }
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         task?.cancel()
     }
     
+    /// 検索ワード入力後に呼び出される関数
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
 //        キーボードをしまう
