@@ -42,8 +42,22 @@ class WebView: UIViewController, UIWebViewDelegate, WKNavigationDelegate{
     
     /// 画面回転検出時に実行
     @objc private func didChangeOrientation(_ notification: Notification) {
-        print("orientate")
-        WebView.frame = CGRect(x: 0, y: SearchView().topHeight, width: self.view.frame.width, height: self.view.frame.height - SearchView().topHeight - additionalSafeAreaInsets.bottom)
+
+        var width = self.view.frame.width
+        var height = self.view.frame.height
+        if UIDevice.current.orientation.isPortrait { //縦画面の時
+            if width > height {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        } else { //横の時
+            if height > width {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        }
+        
+        WebView.frame = CGRect(x: 0, y: SearchView().topHeight, width: width, height: height - SearchView().topHeight - additionalSafeAreaInsets.bottom)
         WebView.setNeedsDisplay()
     }
 

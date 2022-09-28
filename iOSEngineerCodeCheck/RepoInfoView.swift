@@ -151,12 +151,26 @@ class RepoInfoView: UIViewController {
     /// 画面回転時の処理
     @objc private func didChangeOrientation(_ notification: Notification) {
         
-        if self.view.frame.height > self.view.frame.width {
-            ImgView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
-            LblView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 + (self.view.frame.width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+        var width = self.view.frame.width
+        var height = self.view.frame.height
+        if UIDevice.current.orientation.isPortrait { //縦画面の時
+            if width > height {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        } else { //横の時
+            if height > width {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        }
+        
+        if height > width {
+            ImgView.frame = CGRect(x: 20, y: height / 2 * 0.7 - (width - 40) / 2, width: width - 40, height: width - 40)
+            LblView.frame = CGRect(x: 20, y: height / 2 * 0.7 + (width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
         } else {
-            ImgView.frame = CGRect(x: 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: self.view.frame.height - 100, height: self.view.frame.height - 100)
-            LblView.frame = CGRect(x: self.view.frame.width / 2 + 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+            ImgView.frame = CGRect(x: 50, y: height / 2 - (height - 100) / 2, width: height - 100, height: height - 100)
+            LblView.frame = CGRect(x: width / 2 + 50, y: height / 2 - (height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
         }
         
         ImgView.setNeedsDisplay()

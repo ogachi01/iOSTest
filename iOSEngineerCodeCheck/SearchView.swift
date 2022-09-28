@@ -73,9 +73,22 @@ class SearchView:UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     /// 画面回転検出時に実行
     @objc private func didChangeOrientation(_ notification: Notification) {
-        SchBr.frame = CGRect(x: 0, y: topHeight, width:view.frame.width, height: 40)
+        var width = self.view.frame.width
+        var height = self.view.frame.height
+        if UIDevice.current.orientation.isPortrait { //縦画面の時
+            if width > height {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        } else { //横の時
+            if height > width {
+                width = self.view.frame.height
+                height = self.view.frame.width
+            }
+        }
+        SchBr.frame = CGRect(x: 0, y: topHeight, width:width, height: 40)
         SchBr.setNeedsDisplay()
-        Tbl.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: self.view.frame.width, height: self.view.frame.height - SchBr.frame.maxY)
+        Tbl.frame = CGRect(x: 0, y: SchBr.frame.maxY, width: width, height: height - SchBr.frame.maxY)
         Tbl.setNeedsDisplay()
         Tbl.reloadData()
     }
