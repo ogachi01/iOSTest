@@ -104,6 +104,16 @@ class RepoInfoView: UIViewController {
         label.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: LblView.frame.width, height: 40)
         return label
     }()
+    
+    lazy var WebBtn:UIButton = {
+       var btn = UIButton()
+        btn.setImage(UIImage(systemName: "arrow.right.circle"), for: UIControl.State.normal)
+        btn.setTitle("Webページで開く", for: UIControl.State.normal)
+        btn.frame = CGRect(x: LangLbl.frame.minX, y: IsssLbl.frame.maxY, width: LblView.frame.width, height: 40)
+        btn.addTarget(self, action: #selector(webBtnPushed), for: .touchUpInside)
+        btn.backgroundColor = UIColor.red
+        return btn
+    }()
 
         
     override func viewDidLoad() {
@@ -125,6 +135,7 @@ class RepoInfoView: UIViewController {
         LblView.addSubview(WchsLbl)
         LblView.addSubview(FrksLbl)
         LblView.addSubview(IsssLbl)
+        LblView.addSubview(WebBtn)
         self.view.addSubview(LblView)
         
 //        ラベルのテキスト情報の編集
@@ -183,6 +194,13 @@ class RepoInfoView: UIViewController {
             }
         }
         
+    }
+    
+    @objc func webBtnPushed() {
+        let webView = WebView()
+//        ↓該当リポジトリのデータは全て渡しているので、後々表示項目を足しても大丈夫
+        webView.url = repoData["html_url"] as! String
+        navigationController?.pushViewController(webView, animated: true)
     }
     
 }
