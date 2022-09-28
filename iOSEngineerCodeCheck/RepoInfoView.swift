@@ -216,9 +216,9 @@ class RepoInfoView: UIViewController {
         
     }
     
+    /// webページを表示するボタン押下時の処理
     @objc func webBtnPushed() {
         let webView = WebView()
-//        ↓該当リポジトリのデータは全て渡しているので、後々表示項目を足しても大丈夫
         webView.url = repoData["html_url"] as! String
         navigationController?.pushViewController(webView, animated: true)
     }
