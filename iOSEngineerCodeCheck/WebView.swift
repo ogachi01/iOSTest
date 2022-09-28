@@ -50,7 +50,7 @@ class WebView: UIViewController, UIWebViewDelegate, WKNavigationDelegate{
                 width = self.view.frame.height
                 height = self.view.frame.width
             }
-        } else { //横の時
+        } else if UIDevice.current.orientation.isLandscape { //横の時
             if height > width {
                 width = self.view.frame.height
                 height = self.view.frame.width

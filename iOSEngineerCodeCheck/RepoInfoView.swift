@@ -20,9 +20,11 @@ class RepoInfoView: UIViewController {
         var imageView = UIImageView()
 //        縦長・横長で分岐
         if self.view.frame.height > self.view.frame.width {
-            imageView.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 - (self.view.frame.width - 40) / 2, width: self.view.frame.width - 40, height: self.view.frame.width - 40)
+            let len = (self.view.frame.width - 40 < self.view.frame.height / 2) ? self.view.frame.width - 40 : self.view.frame.height / 2 - 40
+            imageView.frame = CGRect(x: (self.view.frame.width - len) / 2, y: self.view.frame.height / 2 * 0.7 - (len) / 2, width: len, height: len)
         } else {
-            imageView.frame = CGRect(x: 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: self.view.frame.height - 100, height: self.view.frame.height - 100)
+            let len = (self.view.frame.height - 100 < self.view.frame.width / 2) ? self.view.frame.height - 100 : self.view.frame.width / 2 - 100
+                imageView.frame = CGRect(x: 50, y: self.view.frame.height / 2 - (len) / 2, width: len, height: len)
         }
         return imageView
     }()
@@ -32,9 +34,9 @@ class RepoInfoView: UIViewController {
         var view = UIView()
 //        縦長・横長で分岐
         if self.view.frame.height > self.view.frame.width {
-            view.frame = CGRect(x: 20, y: self.view.frame.height / 2 * 0.7 + (self.view.frame.width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+            view.frame = CGRect(x: ImgView.frame.minX, y: self.view.frame.height / 2 + 100, width: ImgView.frame.width, height: ImgView.frame.height)
         } else {
-            view.frame = CGRect(x: self.view.frame.width / 2 + 50, y: self.view.frame.height / 2 - (self.view.frame.height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+            view.frame = CGRect(x: self.view.frame.width / 2 + 50, y: ImgView.frame.minY, width: ImgView.frame.width, height: ImgView.frame.height)
         }
         return view
     }()
@@ -158,7 +160,7 @@ class RepoInfoView: UIViewController {
                 width = self.view.frame.height
                 height = self.view.frame.width
             }
-        } else { //横の時
+        } else if UIDevice.current.orientation.isLandscape { //横の時
             if height > width {
                 width = self.view.frame.height
                 height = self.view.frame.width
@@ -166,11 +168,13 @@ class RepoInfoView: UIViewController {
         }
         
         if height > width {
-            ImgView.frame = CGRect(x: 20, y: height / 2 * 0.7 - (width - 40) / 2, width: width - 40, height: width - 40)
-            LblView.frame = CGRect(x: 20, y: height / 2 * 0.7 + (width - 40) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+            let len = (width - 40 < height / 2) ? width - 40 : height / 2 - 40
+            ImgView.frame = CGRect(x: (width - len) / 2, y: height / 2 * 0.7 - len / 2, width: len, height: len)
+            LblView.frame = CGRect(x: ImgView.frame.minX, y: height / 2 + 100, width: ImgView.frame.width, height: ImgView.frame.height)
         } else {
-            ImgView.frame = CGRect(x: 50, y: height / 2 - (height - 100) / 2, width: height - 100, height: height - 100)
-            LblView.frame = CGRect(x: width / 2 + 50, y: height / 2 - (height - 100) / 2, width: ImgView.frame.width, height: ImgView.frame.height)
+            let len = (height - 100 < width / 2) ? height - 100 : width / 2 - 100
+            ImgView.frame = CGRect(x: 50, y: height / 2 - len / 2, width: len, height: len)
+            LblView.frame = CGRect(x: width / 2 + 50, y: ImgView.frame.minY, width: ImgView.frame.width, height: ImgView.frame.height)
         }
         
         ImgView.setNeedsDisplay()
@@ -188,6 +192,8 @@ class RepoInfoView: UIViewController {
         FrksLbl.setNeedsDisplay()
         IsssLbl.frame = CGRect(x: LangLbl.frame.minX, y: FrksLbl.frame.maxY, width: LblView.frame.width, height: 40)
         IsssLbl.setNeedsDisplay()
+        WebBtn.frame = CGRect(x: LangLbl.frame.minX, y: IsssLbl.frame.maxY, width: LblView.frame.width, height: 40)
+        WebBtn.setNeedsDisplay()
     }
     
     /// 画像を取得・表示
